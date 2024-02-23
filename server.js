@@ -28,7 +28,19 @@ app.get('/:path', function(req, res) {
     res.sendFile(path);
 });
 
-mongoose.connect('mongodb://localhost:27017', {  });
+
+// mongoose.connect(process.env.MONGO_URI);
+
+const dbURI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PW}@${process.env.MONGO_URI}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+console.log(dbURI)
+mongoose.connect(dbURI)
+.then(() => {
+  console.log('Connected to MongoDB successfully!');
+})
+.catch((error) => {
+  console.error('Error connecting to MongoDB:', error);
+});
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/strava', stravaRouter);
 

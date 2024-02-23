@@ -5,16 +5,7 @@ const User = require('../models/User');
 
 router.post('/setToken', async (req, res) => {
   try {
-    const { username, password, email } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      username,
-      password: hashedPassword,
-      email,
-    });
-
+    
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
