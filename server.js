@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose")
 const cors = require("cors");
+const RateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const authRouter = require("./routes/authRoute")
@@ -14,6 +15,18 @@ const PORT = process.env.PORT || 8080;
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+var limiter = RateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // max 100 requests per windowMs
+});
+app.use(limiter);
+
+app.get('/:path', function(req, res) {
+  let path = req.params.path;
+  if (isValidPath(path))
+    res.sendFile(path);
+});
 
 mongoose.connect('mongodb://localhost:27017', {  });
 app.use('/api/v1/auth', authRouter);

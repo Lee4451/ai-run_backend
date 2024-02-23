@@ -25,6 +25,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    if (typeof id !== "string") {
+      res.status(400).json({ status: "error" });
+      return;
+    }
     const user = await User.findOne({ username });
 
     if (!user) {
