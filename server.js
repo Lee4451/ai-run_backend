@@ -4,6 +4,7 @@ const cors = require("cors");
 require('dotenv').config();
 
 const authRouter = require("./routes/authRoute")
+const stravaRouter = require("./routes/stravaRoute")
 
 // const authRouter = require('./routes/auth')
 const app = express();
@@ -14,8 +15,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mern_portal', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017', {  });
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/strava', stravaRouter);
 
 // app.get("/", (req, res) => {
 //   res.json({ message: "Test successful." });
