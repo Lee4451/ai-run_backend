@@ -23,32 +23,35 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  
-  try {
     const { username, password } = req.body;
     console.log(req.body)
     if (typeof username !== "string") {
       res.status(400).json({ status: "error" });
       return;
     }
-    const user = await User.findOne({ username });
+  
+    User.findOne({ username })
+      .then((response) =>{
+        if(bcrypt.compare(password, response.password)) {
+          res.send({
+            _id: response._id,
+            username: response.username,
+            email: response.email,
+            strava_token: response.strava_token
+          })
+        } else {
+          res.status(401).json({ message: 'Invalid credentials' });
+          return;
+        }
+      })
+      .catch( error=> {
+          console.log(error)
+          res.status(401).json({ message: 'Invalid credentials' });
+        return
+      })
 
-    if (!user) {
-      res.status(401).json({ message: 'Invalid credentials' });
-      return;
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      res.status(401).json({ message: 'Invalid credentials' });
-      return;
-    }
-
-    res.status(200).json({ message: username });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+    
+    
 });
 
 module.exports = router;
