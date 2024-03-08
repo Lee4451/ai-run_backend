@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const authRouter = require("./routes/authRoute")
 const stravaRouter = require("./routes/stravaRoute")
+const dataRouter = require("./routes/dataRoute")
 
 // const authRouter = require('./routes/auth')
 const app = express();
@@ -39,6 +40,7 @@ mongoose.connect(dbURI)
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/strava', stravaRouter);
+app.use('/api/v1/data', dataRouter);
 
 // app.get("/", (req, res) => {
 //   res.json({ message: "Test successful." });
